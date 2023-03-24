@@ -12,4 +12,36 @@ body {
 .container {
     height: 100%;
     width: 100%;
+    background: #d1d5db;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-area {
+    height: 600px;
+    width: 600px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.square1,
+.square2,
+.square4,
+.square5 {
+    border-right: 5px solid #f97316;
+    border-bottom: 5px solid #f97316;
+}
+
+.square3,
+.square6 {
+    border-bottom: 5px solid #f97316;
+}
+
+.square7,
+.square8 {
+    border-right: 5px solid #f97316;
 }
