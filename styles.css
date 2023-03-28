@@ -20,7 +20,7 @@ body {
     align-items: center;
 }
 
-#game-area {
+#game-board {
     height: 600px;
     width: 600px;
     display: grid;
@@ -28,20 +28,28 @@ body {
     grid-template-rows: repeat(3, 1fr);
 }
 
-.square1,
-.square2,
-.square4,
-.square5 {
+#square1,
+#square2,
+#square4,
+#square5 {
     border-right: 5px solid #f97316;
     border-bottom: 5px solid #f97316;
 }
 
-.square3,
-.square6 {
+#square3,
+#square6 {
     border-bottom: 5px solid #f97316;
 }
 
-.square7,
-.square8 {
+#square7,
+#square8 {
     border-right: 5px solid #f97316;
+}
+
+.square {
+    font-size: 128px;
+    color: #f97316;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
