@@ -43,6 +43,8 @@ const gameController = (playerOne = "Player One", playerTwo = "Player Two") => {
 
   const getActivePlayer = () => switchPlayer();
 
+  const playRound = () => {};
+
   return { getBoard: board.getBoard, getActivePlayer };
 };
 
@@ -53,6 +55,7 @@ const displayController = () => {
   const display = () => {
     const board = game.getBoard();
     console.log(board);
+    displayDiv.textContent = "";
 
     board.forEach((row) => {
       row.forEach((cell, index) => {
@@ -65,6 +68,18 @@ const displayController = () => {
       });
     });
   };
+
+  function clickEvent() {
+    const squares = document.querySelectorAll(".cell");
+
+    squares.forEach((square) =>
+      square.addEventListener("click", () => {
+        gameController();
+        display();
+      })
+    );
+  }
   display();
+  clickEvent();
 };
 displayController();
