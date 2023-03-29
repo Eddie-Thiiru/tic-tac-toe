@@ -1,21 +1,30 @@
-const gameBoard = () => {
+const GameBoard = () => {
   const rows = 3;
   const columns = 3;
   const board = [];
 
+  // Create a 2d array
   for (let i = 0; i < rows; i++) {
     board[i] = [];
     for (let j = 0; j < columns; j++) {
-      board[i].push(cell());
+      board[i].push(Cell());
     }
   }
 
   const getBoard = () => board;
 
-  return { getBoard };
+  const cellValue = (row, column, player) => {
+    const obj = board[row][column];
+
+    if (obj.getValue() === "") {
+      obj.addValue(player);
+    }
+  };
+
+  return { getBoard, cellValue };
 };
 
-const cell = () => {
+const Cell = () => {
   let value = "";
 
   const addValue = (player) => {
@@ -33,53 +42,62 @@ const gameController = (playerOne = "Player One", playerTwo = "Player Two") => {
     { name: playerTwo, value: "O" },
   ];
 
-  const board = gameBoard();
+  const board = GameBoard();
 
   let activePlayer = players[0];
 
   const switchPlayer = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
+  const getActivePlayer = () => activePlayer;
 
-  const getActivePlayer = () => switchPlayer();
+  const playRound = (row, column) => {
+    board.cellValue(row, column, getActivePlayer().value);
+    switchPlayer();
+  };
 
-  const playRound = () => {};
-
-  return { getBoard: board.getBoard, getActivePlayer };
+  return { playRound, getActivePlayer, getBoard: board.getBoard };
 };
 
-const displayController = () => {
+const DisplayController = () => {
   const displayDiv = document.querySelector("#game-board");
   const game = gameController();
 
   const display = () => {
     const board = game.getBoard();
-    console.log(board);
+    let num = 0;
+    // Clear board
     displayDiv.textContent = "";
 
     board.forEach((row) => {
       row.forEach((cell, index) => {
         const square = document.createElement("button");
         square.classList.add("cell");
-        square.dataset.cell = index;
+        square.dataset.column = index;
+        square.dataset.num = num;
         square.textContent = cell.getValue();
-
         displayDiv.appendChild(square);
       });
+      num++;
     });
+
+    function clickHandler() {
+      const squares = document.querySelectorAll(".cell");
+
+      squares.forEach((square) =>
+        square.addEventListener("click", (e) => {
+          const selectedRow = e.target.dataset.num;
+          const selectedColumn = e.target.dataset.column;
+
+          if (square.textContent === "") {
+            game.playRound(selectedRow, selectedColumn);
+            display();
+          }
+        })
+      );
+    }
+    clickHandler();
   };
-
-  function clickEvent() {
-    const squares = document.querySelectorAll(".cell");
-
-    squares.forEach((square) =>
-      square.addEventListener("click", () => {
-        gameController();
-        display();
-      })
-    );
-  }
   display();
-  clickEvent();
 };
-displayController();
+DisplayController();
