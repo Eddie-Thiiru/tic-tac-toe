@@ -61,11 +61,16 @@ const gameController = (playerOne = "Player One", playerTwo = "Player Two") => {
 
 const DisplayController = () => {
   const displayDiv = document.querySelector("#game-board");
+  const currentPlayer = document.querySelector(".turn");
   const game = gameController();
 
   const display = () => {
     const board = game.getBoard();
+    const player = game.getActivePlayer().name;
     let num = 0;
+
+    currentPlayer.textContent = `${player}'s Turn`;
+
     // Clear board
     displayDiv.textContent = "";
 
