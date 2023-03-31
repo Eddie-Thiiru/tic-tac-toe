@@ -60,57 +60,27 @@ const GameController = (playerOne = "Player One", playerTwo = "Player Two") => {
   const getActivePlayer = () => activePlayer;
 
   const playRound = (row, column) => {
-    board.addCellValue(row, column, getActivePlayer().value);
-    // const cell = board.getBoard()[row][column];
-    // console.log(cell.getValue());
     const winner = document.querySelector(".winner");
     const array = board.getBoard();
 
-    let playerOneCount = 0;
-    let playerTwoCount = 0;
+    board.addCellValue(row, column, getActivePlayer().value);
 
-    for (let i = 0; i < array.length; i++) {
-      console.log(array[i]);
+    const playerWinner = () => {
+      for (let i = 0; i < array.length; i++) {
+        console.log(array[i]);
 
-      for (let j = 0; j < array[i].length; j++) {
-        const value = array[i][j].getValue();
-        if (value === "X") {
-          playerOneCount += 1;
-        } else if (value === "O") {
-          playerTwoCount += 1;
+        // check row values
+        const checkValue = array[i].every((obj) => obj.getValue() === "X");
+        if (checkValue === true) {
+          console.log("player one has three! Player One Wins!");
+          winner.textContent = `Player One Wins!`;
         }
       }
-    }
+    };
+    playerWinner();
+
     switchPlayer();
     DisplayController.display();
-
-    console.log(playerOneCount, playerTwoCount);
-    if (playerOneCount === 3) {
-      console.log("player one has three! Player One Wins!");
-      winner.textContent = `Player One Wins!`;
-      // create new board to start a new game
-      // board.removeCellValue();
-      // DisplayController.display();
-    }
-
-    // array.map((arr) => {
-    //   const playerOneCount = arr.filter(
-    //     (obj) => obj.getValue() === "X"
-
-    //     // if (objValue === "X") {
-    //     //   x += 1;
-    //     // } else if (objValue === "O") {
-    //     //   o += 1;
-    //     // }
-    //   );
-    //   const playerTwoCount = arr.filter((obj) => obj.getValue() === "O");
-    //   console.log(playerOneCount);
-    //   console.log(playerTwoCount);
-    //   if (playerOneCount.length === 3) {
-    //     console.log("player one has three");
-    //     return;
-    //   }
-    // });
   };
 
   return { playRound, getActivePlayer, getBoard: board.getBoard };
@@ -158,7 +128,6 @@ const DisplayController = (function () {
 
           if (square.textContent === "") {
             game.playRound(selectedRow, selectedColumn);
-            // display();
           }
         })
       );
