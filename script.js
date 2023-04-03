@@ -136,9 +136,21 @@ const GameController = (playerOne = "Player One", playerTwo = "Player Two") => {
         winner.textContent = `${player} Wins!`;
       }
     };
+
+    const gameDraw = () => {
+      const fullBoard = array.every((arr) =>
+        arr.every((elem) => elem.getValue() !== "")
+      );
+      console.log(fullBoard);
+
+      if (fullBoard === true) {
+        winner.textContent = "Game Drawn!";
+      }
+    };
     rowWinner();
     columnWinner();
     diagonalWinner();
+    gameDraw();
 
     switchPlayer();
     DisplayController.display();
