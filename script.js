@@ -14,15 +14,15 @@ const GameBoard = () => {
   const getBoard = () => board;
 
   const addCellValue = (row, column, player) => {
-    const obj = board[row][column];
+    const elem = board[row][column];
 
-    if (obj.getValue() === "") {
-      obj.addValue(player);
+    if (elem.getValue() === "") {
+      elem.addValue(player);
     }
   };
 
   const removeCellValue = () => {
-    board.map((arr) => arr.map((obj) => obj.emptyValue()));
+    board.map((arr) => arr.map((elem) => elem.emptyValue()));
   };
 
   return { getBoard, addCellValue, removeCellValue };
@@ -69,8 +69,8 @@ const GameController = (playerOne = "Player One", playerTwo = "Player Two") => {
 
     const rowWinner = () => {
       array.forEach((arr) => {
-        const playerOneRow = arr.every((obj) => obj.getValue() === "X");
-        const playerTwoRow = arr.every((obj) => obj.getValue() === "O");
+        const playerOneRow = arr.every((elem) => elem.getValue() === "X");
+        const playerTwoRow = arr.every((elem) => elem.getValue() === "O");
 
         if (playerOneRow === true || playerTwoRow === true) {
           winner.textContent = `${player} Wins!`;
@@ -80,9 +80,9 @@ const GameController = (playerOne = "Player One", playerTwo = "Player Two") => {
 
     const columnWinner = () => {
       const playerOneColumn = (arr, n) =>
-        arr.every((x) => x[n].getValue() === "X");
+        arr.every((elem) => elem[n].getValue() === "X");
       const playerTwoColumn = (arr, n) =>
-        arr.every((x) => x[n].getValue() === "O");
+        arr.every((elem) => elem[n].getValue() === "O");
 
       if (
         playerOneColumn(array, 0) === true ||
@@ -100,8 +100,45 @@ const GameController = (playerOne = "Player One", playerTwo = "Player Two") => {
         winner.textContent = `${player} Wins!`;
       }
     };
+
+    const diagonalWinner = () => {
+      const playerOneDiagonal = (arr) => {
+        if (
+          (arr[0][0].getValue() === "X" &&
+            arr[1][1].getValue() === "X" &&
+            arr[2][2].getValue() === "X") ||
+          (arr[0][2].getValue() === "X" &&
+            arr[1][1].getValue() === "X" &&
+            arr[2][0].getValue() === "X")
+        ) {
+          return true;
+        }
+      };
+
+      const playerTwoDiagonal = (arr) => {
+        if (
+          (arr[0][0].getValue() === "O" &&
+            arr[1][1].getValue() === "O" &&
+            arr[2][2].getValue() === "O") ||
+          (arr[0][2].getValue() === "O" &&
+            arr[1][1].getValue() === "O" &&
+            arr[2][0].getValue() === "O")
+        ) {
+          return true;
+        }
+      };
+
+      if (playerOneDiagonal(array) === true) {
+        winner.textContent = `${player} Wins!`;
+      }
+
+      if (playerTwoDiagonal(array) === true) {
+        winner.textContent = `${player} Wins!`;
+      }
+    };
     rowWinner();
     columnWinner();
+    diagonalWinner();
 
     switchPlayer();
     DisplayController.display();
