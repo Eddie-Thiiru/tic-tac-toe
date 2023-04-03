@@ -62,22 +62,46 @@ const GameController = (playerOne = "Player One", playerTwo = "Player Two") => {
   const playRound = (row, column) => {
     const winner = document.querySelector(".winner");
     const array = board.getBoard();
+    const player = getActivePlayer().name;
+    console.log(player.name);
 
     board.addCellValue(row, column, getActivePlayer().value);
 
-    const playerWinner = () => {
-      for (let i = 0; i < array.length; i++) {
-        console.log(array[i]);
+    const rowWinner = () => {
+      array.forEach((arr) => {
+        const playerOneRow = arr.every((obj) => obj.getValue() === "X");
+        const playerTwoRow = arr.every((obj) => obj.getValue() === "O");
 
-        // check row values
-        const checkValue = array[i].every((obj) => obj.getValue() === "X");
-        if (checkValue === true) {
-          console.log("player one has three! Player One Wins!");
-          winner.textContent = `Player One Wins!`;
+        if (playerOneRow === true || playerTwoRow === true) {
+          winner.textContent = `${player} Wins!`;
         }
+      });
+    };
+
+    const columnWinner = () => {
+      const playerOneColumn = (arr, n) =>
+        arr.every((x) => x[n].getValue() === "X");
+      const playerTwoColumn = (arr, n) =>
+        arr.every((x) => x[n].getValue() === "O");
+
+      if (
+        playerOneColumn(array, 0) === true ||
+        playerOneColumn(array, 1) === true ||
+        playerOneColumn(array, 2) === true
+      ) {
+        winner.textContent = `${player} Wins!`;
+      }
+
+      if (
+        playerTwoColumn(array, 0) === true ||
+        playerTwoColumn(array, 1) === true ||
+        playerTwoColumn(array, 2) === true
+      ) {
+        winner.textContent = `${player} Wins!`;
       }
     };
-    playerWinner();
+    rowWinner();
+    columnWinner();
 
     switchPlayer();
     DisplayController.display();
