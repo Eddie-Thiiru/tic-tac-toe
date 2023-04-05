@@ -44,15 +44,22 @@ const Cell = () => {
   return { addValue, emptyValue, getValue };
 };
 
-const GameController = (playerOne = "Player One", playerTwo = "Player Two") => {
-  const players = [
-    { name: playerOne, value: "X" },
-    { name: playerTwo, value: "O" },
-  ];
+const GameController = () => {
+  const players = [];
+  let activePlayer = players[0];
+
+  const addPlayers = () => {
+    const playerOne = document.getElementById("player-one").value;
+    const playerTwo = document.getElementById("player-two").value;
+
+    players.push(
+      { name: playerOne, value: "X" },
+      { name: playerTwo, value: "O" }
+    );
+    activePlayer = players[0];
+  };
 
   const board = GameBoard();
-
-  let activePlayer = players[0];
 
   const switchPlayer = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -63,7 +70,6 @@ const GameController = (playerOne = "Player One", playerTwo = "Player Two") => {
     const winner = document.querySelector(".winner");
     const array = board.getBoard();
     const player = getActivePlayer().name;
-    console.log(player.name);
 
     board.addCellValue(row, column, getActivePlayer().value);
 
@@ -141,9 +147,8 @@ const GameController = (playerOne = "Player One", playerTwo = "Player Two") => {
       const fullBoard = array.every((arr) =>
         arr.every((elem) => elem.getValue() !== "")
       );
-      console.log(fullBoard);
 
-      if (fullBoard === true) {
+      if (fullBoard === true && winner.textContent === "") {
         winner.textContent = "Game Drawn!";
       }
     };
@@ -153,24 +158,68 @@ const GameController = (playerOne = "Player One", playerTwo = "Player Two") => {
     gameDraw();
 
     switchPlayer();
-    DisplayController.display();
+    DisplayController.updateScreen();
   };
 
-  return { playRound, getActivePlayer, getBoard: board.getBoard };
+  return { playRound, addPlayers, getActivePlayer, getBoard: board.getBoard };
 };
 
 const DisplayController = (function () {
   const displayDiv = document.querySelector("#game-board");
   const currentPlayer = document.querySelector(".turn");
   const winner = document.querySelector(".winner");
+  const form = document.querySelector(".game-form");
   const game = GameController();
 
-  const display = () => {
+  const initialDisplay = () => {
+    const div1 = document.createElement("div");
+    const div2 = document.createElement("div");
+    const inputOneLabel = document.createElement("label");
+    const inputOne = document.createElement("input");
+    const inputTwoLabel = document.createElement("label");
+    const inputTwo = document.createElement("input");
+    const button = document.createElement("button");
+
+    inputOneLabel.setAttribute("for", "player-one");
+    inputOneLabel.textContent = "Player One Name";
+    inputOne.setAttribute("type", "text");
+    inputOne.setAttribute("id", "player-one");
+    inputTwoLabel.setAttribute("for", "player-two");
+    inputTwoLabel.textContent = "Player Two Name";
+    inputTwo.setAttribute("type", "text");
+    inputTwo.setAttribute("id", "player-two");
+    button.classList.add("form-button");
+    button.setAttribute("type", "submit");
+    button.textContent = "Start Game";
+
+    div1.appendChild(inputOneLabel);
+    div1.appendChild(inputOne);
+    div2.appendChild(inputTwoLabel);
+    div2.appendChild(inputTwo);
+    form.appendChild(div1);
+    form.appendChild(div2);
+    form.appendChild(button);
+
+    function clickHandler() {
+      const formButton = document.querySelector(".form-button");
+
+      formButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        game.addPlayers();
+        form.textContent = "";
+        updateScreen();
+      });
+    }
+    clickHandler();
+  };
+
+  const updateScreen = () => {
     const board = game.getBoard();
     const player = game.getActivePlayer().name;
     let num = 0;
 
-    currentPlayer.textContent = `${player}'s Turn`;
+    currentPlayer.textContent =
+      winner.textContent === "" ? `${player}'s Turn` : "";
 
     // Clear board
     displayDiv.textContent = "";
@@ -208,6 +257,6 @@ const DisplayController = (function () {
     clickHandler();
   };
 
-  return { display };
+  return { initialDisplay, updateScreen };
 })();
-DisplayController.display();
+DisplayController.initialDisplay();
