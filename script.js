@@ -22,7 +22,7 @@ const GameBoard = () => {
   };
 
   const removeCellValue = () => {
-    board.map((arr) => arr.map((elem) => elem.emptyValue()));
+    board.forEach((arr) => arr.forEach((elem) => elem.emptyValue()));
   };
 
   return { getBoard, addCellValue, removeCellValue };
@@ -45,6 +45,8 @@ const Cell = () => {
 };
 
 const GameController = () => {
+  const winner = document.querySelector(".winner");
+  const board = GameBoard();
   const players = [];
   let activePlayer = players[0];
 
@@ -52,26 +54,32 @@ const GameController = () => {
     const playerOne = document.getElementById("player-one").value;
     const playerTwo = document.getElementById("player-two").value;
 
-    players.push(
-      { name: playerOne, value: "X" },
-      { name: playerTwo, value: "O" }
-    );
+    players.push({ name: playerOne }, { name: playerTwo });
     activePlayer = players[0];
   };
-
-  const board = GameBoard();
 
   const switchPlayer = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
+
+  const resetPlayer = () => {
+    if (winner.textContent !== "" && activePlayer === players[0]) {
+      [players[0], players[1]] = [players[1], players[0]];
+    } else if (winner.textContent !== "" && activePlayer === players[1]) {
+      [players[1], players[0]] = [players[0], players[1]];
+      console.log(players);
+    } else {
+      activePlayer = players[0];
+    }
+  };
   const getActivePlayer = () => activePlayer;
 
   const playRound = (row, column) => {
-    const winner = document.querySelector(".winner");
     const array = board.getBoard();
     const player = getActivePlayer().name;
+    let value = activePlayer === players[0] ? "X" : "O";
 
-    board.addCellValue(row, column, getActivePlayer().value);
+    board.addCellValue(row, column, value);
 
     const rowWinner = () => {
       array.forEach((arr) => {
@@ -161,7 +169,13 @@ const GameController = () => {
     DisplayController.updateScreen();
   };
 
-  return { playRound, addPlayers, getActivePlayer, getBoard: board.getBoard };
+  return {
+    playRound,
+    addPlayers,
+    resetPlayer,
+    getActivePlayer,
+    getBoard: board.getBoard,
+  };
 };
 
 const DisplayController = (function () {
@@ -169,6 +183,7 @@ const DisplayController = (function () {
   const currentPlayer = document.querySelector(".turn");
   const winner = document.querySelector(".winner");
   const form = document.querySelector(".game-form");
+  const restart = document.querySelector(".restart-game");
   const game = GameController();
 
   const initialDisplay = () => {
@@ -216,6 +231,7 @@ const DisplayController = (function () {
   const updateScreen = () => {
     const board = game.getBoard();
     const player = game.getActivePlayer().name;
+    console.log(player);
     let num = 0;
 
     currentPlayer.textContent =
@@ -223,6 +239,7 @@ const DisplayController = (function () {
 
     // Clear board
     displayDiv.textContent = "";
+    restart.textContent = "";
 
     board.forEach((row) => {
       row.forEach((cell, index) => {
@@ -236,8 +253,15 @@ const DisplayController = (function () {
       num++;
     });
 
+    // Create restart-game button
+    const restartButton = document.createElement("button");
+    restartButton.classList.add("restart-button");
+    restartButton.textContent = "Restart Game";
+    restart.appendChild(restartButton);
+
     function clickHandler() {
       const squares = document.querySelectorAll(".cell");
+      const restartButton = document.querySelector(".restart-button");
 
       squares.forEach((square) =>
         square.addEventListener("click", (e) => {
@@ -253,6 +277,16 @@ const DisplayController = (function () {
           }
         })
       );
+
+      restartButton.addEventListener("click", () => {
+        board.forEach((arr) => arr.forEach((elem) => elem.emptyValue()));
+
+        game.resetPlayer();
+
+        winner.textContent = "";
+
+        updateScreen();
+      });
     }
     clickHandler();
   };
