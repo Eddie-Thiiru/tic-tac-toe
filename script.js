@@ -54,7 +54,12 @@ const GameController = () => {
     const playerOne = document.getElementById("player-one").value;
     const playerTwo = document.getElementById("player-two").value;
 
-    players.push({ name: playerOne }, { name: playerTwo });
+    if (playerOne === "" && playerTwo === "") {
+      players.push({ name: "Player" }, { name: "Computer" });
+    } else {
+      players.push({ name: playerOne }, { name: playerTwo });
+    }
+
     activePlayer = players[0];
   };
 
@@ -229,9 +234,19 @@ const DisplayController = (function () {
 
     function clickHandler() {
       const formButton = document.querySelector(".form-button");
+      const singlePlayerButton = document.querySelector(".computer-button");
 
       formButton.addEventListener("click", (e) => {
         e.preventDefault();
+        game.addPlayers();
+
+        multiPlayerContainer.textContent = "";
+        singlePlayerContainer.textContent = "";
+
+        updateScreen();
+      });
+
+      singlePlayerButton.addEventListener("click", () => {
         game.addPlayers();
 
         multiPlayerContainer.textContent = "";
