@@ -182,11 +182,14 @@ const DisplayController = (function () {
   const displayDiv = document.querySelector("#game-board");
   const currentPlayer = document.querySelector(".turn");
   const winner = document.querySelector(".winner");
+  const multiPlayerContainer = document.querySelector(".multiple-players");
+  const singlePlayerContainer = document.querySelector(".single-player");
   const form = document.querySelector(".game-form");
   const restart = document.querySelector(".restart-game");
   const game = GameController();
 
-  const initialDisplay = () => {
+  const startScreen = () => {
+    // Create a form for player name inputs
     const div1 = document.createElement("div");
     const div2 = document.createElement("div");
     const inputOneLabel = document.createElement("label");
@@ -203,8 +206,8 @@ const DisplayController = (function () {
     inputTwoLabel.textContent = "Player Two Name";
     inputTwo.setAttribute("type", "text");
     inputTwo.setAttribute("id", "player-two");
+    button.type = "submit";
     button.classList.add("form-button");
-    button.setAttribute("type", "submit");
     button.textContent = "Start Game";
 
     div1.appendChild(inputOneLabel);
@@ -215,13 +218,25 @@ const DisplayController = (function () {
     form.appendChild(div2);
     form.appendChild(button);
 
+    // Create a button for player vs computer option
+    const singlePlayer = document.createElement("button");
+
+    singlePlayer.type = "button";
+    singlePlayer.classList.add("computer-button");
+    singlePlayer.textContent = "Start Game";
+
+    singlePlayerContainer.appendChild(singlePlayer);
+
     function clickHandler() {
       const formButton = document.querySelector(".form-button");
 
       formButton.addEventListener("click", (e) => {
         e.preventDefault();
         game.addPlayers();
-        form.textContent = "";
+
+        multiPlayerContainer.textContent = "";
+        singlePlayerContainer.textContent = "";
+
         updateScreen();
       });
     }
@@ -291,6 +306,6 @@ const DisplayController = (function () {
     clickHandler();
   };
 
-  return { initialDisplay, updateScreen };
+  return { startScreen, updateScreen };
 })();
-DisplayController.initialDisplay();
+DisplayController.startScreen();
