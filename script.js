@@ -259,6 +259,7 @@ const DisplayController = (function () {
     board.forEach((row) => {
       row.forEach((cell, index) => {
         const square = document.createElement("button");
+        square.type = "button";
         square.classList.add("cell");
         square.dataset.column = index;
         square.dataset.num = num;
