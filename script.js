@@ -55,7 +55,7 @@ const GameController = () => {
     const playerTwo = document.getElementById("player-two").value;
 
     if (playerOne === "" && playerTwo === "") {
-      players.push({ name: "Player" }, { name: "Computer" });
+      players.push({ name: "Computer" }, { name: "Player" });
     } else {
       players.push({ name: playerOne }, { name: playerTwo });
     }
@@ -64,20 +64,44 @@ const GameController = () => {
   };
 
   const switchPlayer = () => {
+    if (winner.textContent !== "") {
+      return;
+    }
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
 
   const resetPlayer = () => {
-    if (winner.textContent !== "" && activePlayer === players[0]) {
+    if (winner.textContent !== "") {
       [players[0], players[1]] = [players[1], players[0]];
-    } else if (winner.textContent !== "" && activePlayer === players[1]) {
-      [players[1], players[0]] = [players[0], players[1]];
-      console.log(players);
+      activePlayer = players[0];
     } else {
       activePlayer = players[0];
     }
   };
   const getActivePlayer = () => activePlayer;
+
+  const getComputerChoice = () => {
+    if (winner.textContent !== "") {
+      return;
+    }
+
+    const array = board.getBoard();
+    const randomRow = randomInt(3);
+    const randomColumn = randomInt(3);
+    const cellPosition = array[randomRow][randomColumn];
+
+    function randomInt(max) {
+      return Math.floor(Math.random() * max);
+    }
+
+    if (cellPosition.getValue() === "") {
+      setTimeout(() => {
+        playRound(randomRow, randomColumn);
+      }, 1.0 * 1000);
+    } else {
+      getComputerChoice();
+    }
+  };
 
   const playRound = (row, column) => {
     const array = board.getBoard();
@@ -175,6 +199,7 @@ const GameController = () => {
   };
 
   return {
+    getComputerChoice,
     playRound,
     addPlayers,
     resetPlayer,
@@ -251,8 +276,8 @@ const DisplayController = (function () {
 
         multiPlayerContainer.textContent = "";
         singlePlayerContainer.textContent = "";
-
         updateScreen();
+        game.getComputerChoice();
       });
     }
     clickHandler();
@@ -261,7 +286,7 @@ const DisplayController = (function () {
   const updateScreen = () => {
     const board = game.getBoard();
     const player = game.getActivePlayer().name;
-    console.log(player);
+
     let num = 0;
 
     currentPlayer.textContent =
@@ -306,6 +331,13 @@ const DisplayController = (function () {
           if (square.textContent === "") {
             game.playRound(selectedRow, selectedColumn);
           }
+
+          if (
+            currentPlayer.textContent === "Computer's Turn" &&
+            winner.textContent === ""
+          ) {
+            game.getComputerChoice();
+          }
         })
       );
 
@@ -317,6 +349,10 @@ const DisplayController = (function () {
         winner.textContent = "";
 
         updateScreen();
+
+        if (currentPlayer.textContent === "Computer's Turn") {
+          game.getComputerChoice();
+        }
       });
     }
     clickHandler();
