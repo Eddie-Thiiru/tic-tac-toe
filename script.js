@@ -3,7 +3,7 @@ const GameBoard = () => {
   const columns = 3;
   const board = [];
 
-  // Create a 2d array
+  // Creates a 2d array
   for (let i = 0; i < rows; i++) {
     board[i] = [];
     for (let j = 0; j < columns; j++) {
@@ -21,11 +21,7 @@ const GameBoard = () => {
     }
   };
 
-  const removeCellValue = () => {
-    board.forEach((arr) => arr.forEach((elem) => elem.emptyValue()));
-  };
-
-  return { getBoard, addCellValue, removeCellValue };
+  return { getBoard, addCellValue };
 };
 
 const Cell = () => {
@@ -78,6 +74,7 @@ const GameController = () => {
       activePlayer = players[0];
     }
   };
+
   const getActivePlayer = () => activePlayer;
 
   const getComputerChoice = () => {
@@ -97,7 +94,7 @@ const GameController = () => {
     if (cellPosition.getValue() === "") {
       setTimeout(() => {
         playRound(randomRow, randomColumn);
-      }, 1.0 * 1000);
+      }, 0.8 * 1000);
     } else {
       getComputerChoice();
     }
@@ -173,9 +170,7 @@ const GameController = () => {
 
       if (playerOneDiagonal(array) === true) {
         winner.textContent = `${player} Wins!`;
-      }
-
-      if (playerTwoDiagonal(array) === true) {
+      } else if (playerTwoDiagonal(array) === true) {
         winner.textContent = `${player} Wins!`;
       }
     };
@@ -209,17 +204,16 @@ const GameController = () => {
 };
 
 const DisplayController = (function () {
-  const displayDiv = document.querySelector("#game-board");
+  const container = document.querySelector(".container");
   const currentPlayer = document.querySelector(".turn");
   const winner = document.querySelector(".winner");
   const multiPlayerContainer = document.querySelector(".multiple-players");
   const singlePlayerContainer = document.querySelector(".single-player");
   const form = document.querySelector(".game-form");
-  const restart = document.querySelector(".restart-game");
   const game = GameController();
 
   const startScreen = () => {
-    // Create a form for player name inputs
+    // Creates a form for player name inputs
     const div1 = document.createElement("div");
     const div2 = document.createElement("div");
     const inputOneLabel = document.createElement("label");
@@ -248,7 +242,7 @@ const DisplayController = (function () {
     form.appendChild(div2);
     form.appendChild(button);
 
-    // Create a button for player vs computer option
+    // Creates a button for player vs computer option
     const singlePlayer = document.createElement("button");
 
     singlePlayer.type = "button";
@@ -268,6 +262,7 @@ const DisplayController = (function () {
         multiPlayerContainer.textContent = "";
         singlePlayerContainer.textContent = "";
 
+        createBoardContainer();
         updateScreen();
       });
 
@@ -276,6 +271,8 @@ const DisplayController = (function () {
 
         multiPlayerContainer.textContent = "";
         singlePlayerContainer.textContent = "";
+
+        createBoardContainer();
         updateScreen();
         game.getComputerChoice();
       });
@@ -283,7 +280,47 @@ const DisplayController = (function () {
     clickHandler();
   };
 
+  // Creates board container and restart container
+  const createBoardContainer = () => {
+    const boardContainer = document.createElement("div");
+    const restartContainer = document.createElement("div");
+    const restartButton = document.createElement("button");
+
+    boardContainer.id = "game-board";
+    restartContainer.classList.add("restart-game");
+    restartButton.classList.add("restart-button");
+    restartButton.textContent = "Restart Game";
+
+    container.appendChild(boardContainer);
+    container.appendChild(restartContainer);
+    restartContainer.appendChild(restartButton);
+
+    function clickHandler() {
+      const restartButton = document.querySelector(".restart-button");
+      const board = game.getBoard();
+
+      restartButton.addEventListener("click", () => {
+        board.forEach((arr) =>
+          arr.forEach((elem) => {
+            elem.emptyValue();
+          })
+        );
+
+        winner.textContent = "";
+
+        game.resetPlayer();
+        updateScreen();
+
+        if (currentPlayer.textContent === "Computer's Turn") {
+          game.getComputerChoice();
+        }
+      });
+    }
+    clickHandler();
+  };
+
   const updateScreen = () => {
+    const boardContainer = document.querySelector("#game-board");
     const board = game.getBoard();
     const player = game.getActivePlayer().name;
 
@@ -293,9 +330,9 @@ const DisplayController = (function () {
       winner.textContent === "" ? `${player}'s Turn` : "";
 
     // Clear board
-    displayDiv.textContent = "";
-    restart.textContent = "";
+    boardContainer.textContent = "";
 
+    // Create board cells
     board.forEach((row) => {
       row.forEach((cell, index) => {
         const square = document.createElement("button");
@@ -304,20 +341,13 @@ const DisplayController = (function () {
         square.dataset.column = index;
         square.dataset.num = num;
         square.textContent = cell.getValue();
-        displayDiv.appendChild(square);
+        boardContainer.appendChild(square);
       });
       num++;
     });
 
-    // Create restart-game button
-    const restartButton = document.createElement("button");
-    restartButton.classList.add("restart-button");
-    restartButton.textContent = "Restart Game";
-    restart.appendChild(restartButton);
-
     function clickHandler() {
       const squares = document.querySelectorAll(".cell");
-      const restartButton = document.querySelector(".restart-button");
 
       squares.forEach((square) =>
         square.addEventListener("click", (e) => {
@@ -340,20 +370,6 @@ const DisplayController = (function () {
           }
         })
       );
-
-      restartButton.addEventListener("click", () => {
-        board.forEach((arr) => arr.forEach((elem) => elem.emptyValue()));
-
-        game.resetPlayer();
-
-        winner.textContent = "";
-
-        updateScreen();
-
-        if (currentPlayer.textContent === "Computer's Turn") {
-          game.getComputerChoice();
-        }
-      });
     }
     clickHandler();
   };
