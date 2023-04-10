@@ -46,12 +46,9 @@ const GameController = () => {
   const players = [];
   let activePlayer = players[0];
 
-  const addPlayers = () => {
-    const playerOne = document.getElementById("player-one").value;
-    const playerTwo = document.getElementById("player-two").value;
-
+  const addPlayers = (playerOne, playerTwo) => {
     if (playerOne === "" && playerTwo === "") {
-      players.push({ name: "Computer" }, { name: "Player" });
+      players.push({ name: "Player One" }, { name: "Player Two" });
     } else {
       players.push({ name: playerOne }, { name: playerTwo });
     }
@@ -256,8 +253,11 @@ const DisplayController = (function () {
       const singlePlayerButton = document.querySelector(".computer-button");
 
       formButton.addEventListener("click", (e) => {
+        const playerOne = document.getElementById("player-one").value;
+        const playerTwo = document.getElementById("player-two").value;
+
         e.preventDefault();
-        game.addPlayers();
+        game.addPlayers(playerOne, playerTwo);
 
         multiPlayerContainer.textContent = "";
         singlePlayerContainer.textContent = "";
@@ -267,7 +267,7 @@ const DisplayController = (function () {
       });
 
       singlePlayerButton.addEventListener("click", () => {
-        game.addPlayers();
+        game.addPlayers("Computer", "Player");
 
         multiPlayerContainer.textContent = "";
         singlePlayerContainer.textContent = "";
@@ -306,9 +306,8 @@ const DisplayController = (function () {
           })
         );
 
-        winner.textContent = "";
-
         game.resetPlayer();
+        winner.textContent = "";
         updateScreen();
 
         if (currentPlayer.textContent === "Computer's Turn") {
