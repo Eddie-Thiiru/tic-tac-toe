@@ -204,12 +204,15 @@ const DisplayController = (function () {
   const container = document.querySelector(".container");
   const currentPlayer = document.querySelector(".turn");
   const winner = document.querySelector(".winner");
+  const screen = document.querySelector(".screen");
   const multiPlayerContainer = document.querySelector(".multiple-players");
   const singlePlayerContainer = document.querySelector(".single-player");
   const form = document.querySelector(".game-form");
   const game = GameController();
 
   const startScreen = () => {
+    currentPlayer.textContent = "Choose Opponent";
+
     // Creates a form for player name inputs
     const div1 = document.createElement("div");
     const div2 = document.createElement("div");
@@ -219,6 +222,8 @@ const DisplayController = (function () {
     const inputTwo = document.createElement("input");
     const button = document.createElement("button");
 
+    div1.setAttribute("class", "player1-container");
+    div2.setAttribute("class", "player2-container");
     inputOneLabel.setAttribute("for", "player-one");
     inputOneLabel.textContent = "Player One Name";
     inputOne.setAttribute("type", "text");
@@ -259,8 +264,7 @@ const DisplayController = (function () {
         e.preventDefault();
         game.addPlayers(playerOne, playerTwo);
 
-        multiPlayerContainer.textContent = "";
-        singlePlayerContainer.textContent = "";
+        screen.textContent = "";
 
         createBoardContainer();
         updateScreen();
@@ -269,8 +273,7 @@ const DisplayController = (function () {
       singlePlayerButton.addEventListener("click", () => {
         game.addPlayers("Computer", "Player");
 
-        multiPlayerContainer.textContent = "";
-        singlePlayerContainer.textContent = "";
+        screen.textContent = "";
 
         createBoardContainer();
         updateScreen();
@@ -291,8 +294,8 @@ const DisplayController = (function () {
     restartButton.classList.add("restart-button");
     restartButton.textContent = "Restart Game";
 
-    container.appendChild(boardContainer);
-    container.appendChild(restartContainer);
+    screen.appendChild(boardContainer);
+    screen.appendChild(restartContainer);
     restartContainer.appendChild(restartButton);
 
     function clickHandler() {
