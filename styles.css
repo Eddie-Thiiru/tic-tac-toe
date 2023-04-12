@@ -62,6 +62,7 @@ h1 {
     font-family: 'Righteous', cursive;
     font-size: 3rem;
     color: #93c5fd;
+    text-shadow: #3b82f6 1px 0 10px;
 }
 
 h1,
@@ -132,13 +133,15 @@ input {
 .cell {
     aspect-ratio: 1 / 1;
     font-family: 'Permanent Marker', cursive;
-    font-size: 6rem;
-    color: black;
-    background: #d1d5db;
+    font-size: clamp(4rem, 15vw, 7rem);
+    color: #e0f2fe;
+    background: #334155;
     border: none;
 }
 
-button {
+.form-button,
+.computer-button,
+.restart-button {
     font-family: 'Righteous', cursive;
     font-size: 0.875rem;
     padding: 15px 15px;
@@ -177,4 +180,5 @@ input:focus{
 .computer-button:hover,
 .restart-button:hover {
     background: #bfdbfe;
+    box-shadow:  0px 0px 10px #3b82f6;
 }
