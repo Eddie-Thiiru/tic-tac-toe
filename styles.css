@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff&family=Permanent+Marker&family=Righteous&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -6,8 +8,10 @@
 
 body {
     height: 100vh;
-    font-size: 16px;
-    background: #d1d5db;
+    font-size: 1rem;
+    font-family: 'DynaPuff', cursive;
+    color: white;
+    background: #334155;
 }
 
 .container {
@@ -32,12 +36,15 @@ body {
 }
 
 #game-area > div:first-child {
+    font-family: 'Righteous', cursive;
+    font-size: 1.5rem;
     justify-self: center;
     align-self: center;
 }
 
 .screen {
     display: flex;
+    justify-content: center;
     align-items: center;
     text-align: center;
     flex-direction: column;
@@ -51,10 +58,22 @@ body {
     gap: 25px;
 }
 
+h1 {
+    font-family: 'Righteous', cursive;
+    font-size: 3rem;
+    color: #93c5fd;
+}
+
 h1,
 p {
     align-self: center;
-    padding: 25px;
+    padding: 25px; 
+}
+
+p {
+    font-family: 'Righteous', cursive;
+    font-size: 1.25rem;
+    color: #f97316;
 }
 
 form {
@@ -73,7 +92,15 @@ form > div {
 
 label,
 input {
-    padding: 4px;
+    padding: 5px;
+}
+
+input {
+    font-family: 'DynaPuff', cursive;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
 }
 
 .form-button {
@@ -99,40 +126,55 @@ input {
 
 #game-board {
     display: grid;
-    grid-template-columns: repeat(3,  minmax(100px, 180px));
-    
+    grid-template-columns: repeat(3,  minmax(100px, 180px));   
 }
 
 .cell {
     aspect-ratio: 1 / 1;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 6rem;
+    color: black;
+    background: #d1d5db;
+    border: none;
 }
 
 button {
-    padding: 10px 10px;
+    font-family: 'Righteous', cursive;
+    font-size: 0.875rem;
+    padding: 15px 15px;
+    border-radius: 5px;
+    border: none;
 }
 
-#square1,
-#square2,
-#square4,
-#square5 {
+#game-board > button:nth-child(1),
+#game-board > button:nth-child(2),
+#game-board > button:nth-child(4),
+#game-board > button:nth-child(5) {   
     border-right: 5px solid #f97316;
     border-bottom: 5px solid #f97316;
 }
 
-#square3,
-#square6 {
+#game-board > button:nth-child(3),
+#game-board > button:nth-child(6) { 
     border-bottom: 5px solid #f97316;
 }
 
-#square7,
-#square8 {
+#game-board > button:nth-child(7),
+#game-board > button:nth-child(8) {
     border-right: 5px solid #f97316;
 }
 
-.square {
-    font-size: 128px;
-    color: #f97316;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+input:hover {
+    background: #bfdbfe;
+}
+
+input:focus{
+    outline: none;
+    background: linear-gradient(.25turn, #c4b5fd, #93c5fd, #c4b5fd);
+}
+
+.form-button:hover,
+.computer-button:hover,
+.restart-button:hover {
+    background: #bfdbfe;
 }
