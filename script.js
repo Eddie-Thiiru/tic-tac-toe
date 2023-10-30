@@ -228,10 +228,12 @@ const DisplayController = (function () {
     inputOneLabel.textContent = "Player One Name";
     inputOne.setAttribute("type", "text");
     inputOne.setAttribute("id", "player-one");
+    inputOne.placeholder = "Enter Name";
     inputTwoLabel.setAttribute("for", "player-two");
     inputTwoLabel.textContent = "Player Two Name";
     inputTwo.setAttribute("type", "text");
     inputTwo.setAttribute("id", "player-two");
+    inputTwo.placeholder = "Enter Name";
     button.type = "submit";
     button.classList.add("form-button");
     button.textContent = "Start Game";
